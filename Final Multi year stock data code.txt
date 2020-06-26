@@ -1,0 +1,79 @@
+Sub Alphabetical_testing()
+
+    'set variables
+    Dim ticker As String
+    Dim yearly_change As Double
+    Dim open_price As Double
+    Dim close_price As Double
+    Dim percent_change As Double
+    Dim total_stock_volume As Long
+    Dim last_Row As Long
+    Dim x As Double
+    Dim yearly_color As Long
+    For Each ws In Worksheets
+      
+    ' add all headers
+    ws.Range("I1").Value = "Ticker"
+    ws.Cells(1, 10).Value = "Yearly Change" 'the other way to write cells not range
+    ws.Range("K1").Value = "Percent Change"
+    ws.Range("L1").Value = "Total Stock Volume"
+    
+    'last row
+    last_Row = ws.Cells(Rows.Count, 1).End(xlUp).Row
+    yearly_color = ws.Cells(Rows.Count, 10).End(xlUp).Row
+    
+    'Declaring the row number output
+    x = 2
+    yearly_change = 0
+    percent_change = 0
+    volume = 0
+    open_price = ws.Cells(2, 3).Value
+    
+    'loop for volume
+    For i = 2 To last_Row
+        volume = volume + ws.Cells(i, 7).Value
+        
+        'output for volume
+        ws.Cells(x, 12).Value = volume
+        
+        'finding the ticker by comparing i with i+1
+        If ws.Cells(i, 1).Value <> ws.Cells(i + 1, 1) Then
+            ws.Cells(x, 9).Value = ws.Cells(i, 1).Value
+       
+            close_price = ws.Cells(i, 6).Value
+            yearly_change = (close_price - open_price)
+            
+            'Output yearly change to
+            ws.Cells(x, 10).Value = yearly_change
+            
+            'loop for color
+            ' For Item = 2 To yearly_color
+            If yearly_change < 0 Then
+                ws.Cells(x, 10).Interior.ColorIndex = 3
+            Else: ws.Cells(x, 10).Interior.ColorIndex = 4
+            End If
+            ' Next Item
+    
+             'calculate percent change
+            If (closed_price = 0 And open_price = 0) Then
+                percent_change = 0
+            ElseIf (closed_price <> 0 And open_price = 0) Then
+                percent_change = 1
+            Else: percent_change = yearly_change / open_price
+                'Output answer percent change to
+                ws.Cells(x, 11).Value = percent_change
+                ws.Cells(x, 11).NumberFormat = "0.00%"
+            End If
+       
+            x = x + 1
+            yearly_change = 0
+            percent_change = 0
+            volume = 0
+            open_price = ws.Cells(i + 1, 3).Value
+        End If
+    
+    Next i
+    Next ws
+
+End Sub
+ 
